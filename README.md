@@ -10,7 +10,7 @@
 
 [Helpful writeup from Telerik](https://www.telerik.com/blogs/sharing-code-blazor-dotnet-maui)
 
-!(Solution Layout)[/SolutionLayout.svg]
+![Solution Layout](/SolutionLayout.svg)
 
 ## Build
 
