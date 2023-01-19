@@ -1,0 +1,30 @@
+FROM ubuntu:22.04
+
+# Run me without a build context: 
+# docker build -t mauibuild - < Dockerfile-mauibuild
+
+# Configure .NET 6 and 7 to install from Microsoft's package repository 
+RUN apt update && apt install wget -y
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb
+
+RUN echo "Package: *" > /etc/apt/preferences && echo "Pin: origin ""packages.microsoft.com""" >> /etc/apt/preferences && echo "Pin-Priority: 1001" >> /etc/apt/preferences 
+
+# Install .NET and Android SDK
+WORKDIR /Setup
+
+RUN apt update && apt install dotnet-sdk-6.0 dotnet-sdk-7.0 android-sdk -y && apt clean
+RUN dotnet workload install maui-android
+
+# Install Android SDK command line tools; extract to $ANDROID_HOME/cmdline-tools/latest/
+ENV ANDROID_HOME=/usr/lib/android-sdk
+RUN wget --quiet https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+RUN mkdir -p $ANDROID_HOME/cmdline-tools/
+RUN unzip commandlinetools-linux-9123335_latest.zip -d $ANDROID_HOME/cmdline-tools/
+RUN mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest/
+RUN rm commandlinetools-linux-9123335_latest.zip
+
+# Install v33 of Android
+RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --update
+RUN yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-33"
