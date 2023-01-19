@@ -8,8 +8,6 @@
 * Server.API - .NET 6 in-process Azure Function.  
 * Common - Minimal class library for data transfer objects and business logic that is shared between client & server; targets .NET 6 and 7. 
 
-[Helpful writeup from Telerik](https://www.telerik.com/blogs/sharing-code-blazor-dotnet-maui)
-
 ![Solution Layout](/SolutionLayout.svg)
 
 ## Build
